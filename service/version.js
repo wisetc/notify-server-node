@@ -2,7 +2,7 @@ const restify = require('restify');
 const sendEmail = require('../app').sendEmail;
 
 async function respond(req, res, next) {
-  const mailerList = ['zhi@uqugu.com'];
+  const mailerList = ['zhi@uqugu.com', 'zhoutingting5542@dingtalk.com'];
   const content = await sendEmail(mailerList, req.body);
   res.json(content);
   next();
