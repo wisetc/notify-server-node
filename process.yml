@@ -1,0 +1,10 @@
+apps:
+  - name: notify-server-node
+    script: service/version.js
+    cwd: .
+    interpreter: /bin/node
+    restart: always
+    env:
+      PORT: 28225
+      NODE_ENV: production
+
