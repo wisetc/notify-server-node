@@ -3,7 +3,11 @@ div
     img(alt="build status" src="http://sygit.sayyoo.cn/frontend/dingtalk-app-workflow/badges/master/build.svg")
 p #{name}好,
 p #{detail}
-p 本次更新#{commitMessage}
+if commitMessage
+  p 本次更新
+    span(style="margin-left:16px;")「
+    span(style="background:blue; text-decoration:underline;") #{commitMessage}
+    span 」
 p 当前时间#{new Date().toLocaleString()}
 p 当前版本#{version || '未提供'}
 p
