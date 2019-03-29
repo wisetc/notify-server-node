@@ -1,8 +1,10 @@
 p #{name}好,
 p #{detail}
 if commitMessage
-  p 本次更新 <span style="margin-left:4px;"></span>「<span style="background:#a86454; padding:4px; color:white; text-decoration:underline;">#{commitMessage}</span> 」
-p 当前时间#{new Date().toLocaleString()}
-p 当前版本#{version || '未提供'}
+  p 本次更新<span style="margin-left:4px;"></span>「<span style="background:#a86454; padding:4px; color:white; text-decoration:underline;">#{commitMessage}</span> 」
+if author
+  p 本次提交者: #{author}
+p 当前时间: #{new Date().toISOString().slice(0,19).replace('T', ' ')}
+p 当前版本: #{version || '未提供'}
 p
   a(href=url) 访问链接
