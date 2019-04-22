@@ -1,10 +1,13 @@
 const Email = require('email-templates');
 const nodemailer = require('nodemailer');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 function configEmail() {
   const auth = {
-    user: '1921886520@qq.com',
-    pass: 'oamxuvhhjwgocddi',
+    user: process.env.EMAIL_USERNAME,
+    pass: process.env.EMAIL_PASSWORD
   };
 
   const transport = nodemailer.createTransport({
