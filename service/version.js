@@ -2,13 +2,12 @@ const restify = require('restify');
 const mysql = require('mysql2/promise');
 const sendEmail = require('../app').sendEmail;
 
-const { HOST, PORT, USERNAME, PASSWORD, DATABASE } = process.env;
 const config = {
-  host: HOST,
-  port: Number(PORT),
-  user: USERNAME,
-  password: PASSWORD,
-  database: DATABASE,
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
 };
 
 async function testConnection(config) {
