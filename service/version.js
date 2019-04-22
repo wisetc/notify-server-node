@@ -22,8 +22,27 @@ async function testConnection(config) {
   }
 }
 
+async function createConnection() {
+  const connection = await mysql.createConnection(config);
+  console.log('msyql server connected');
+  return connection;
+}
+
+let connection = null;
+createConnection().then(_connection => connection = _connection);
+
+async function querySubscribers() {
+  if (!connection) {
+    connection = await createConnection();
+  }
+  const [rows] = await connection.execute(`SELECT * FROM subscriber WHERE is_active=1;`);
+  console.log(rows);
+  return Array.isArray(rows) ? rows : [];
+}
+
 async function respond(req, res, next) {
-  const mailerList = ['zhi@uqugu.com', 'zhoutingting@dexingroup.com', 'lipan@dexingroup.com', '849538010@qq.com', '1039681233@qq.com'];
+  const subscribers = await querySubscribers();
+  const mailerList = subscribers.map(p => p.email);
   const content = await sendEmail(mailerList, req.body);
   res.json(content);
   next();
@@ -35,11 +54,18 @@ async function respondTest(req, res, next) {
   next();
 }
 
+async function responseSubscribers(req, res, next) {
+  const subscribers = await querySubscribers();
+  res.json(subscribers);
+  next();
+}
+
 const server = restify.createServer();
 server.use(restify.plugins.bodyParser());
 
 server.post('/', respond);
 server.get('/testconnection', respondTest);
+server.get('/subscribers', responseSubscribers);
 
 server.listen(process.env.PORT || 80, function() {
   console.log('%s listening at %s', server.name, server.url);
