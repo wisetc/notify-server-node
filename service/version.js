@@ -21,29 +21,44 @@ async function testConnection(config) {
   }
 }
 
+async function createPool() {
+  const pool = mysql.createPool({
+    ...config,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  });
+  console.log('pool created');
+  return pool;
+}
+
 async function createConnection() {
   const connection = await mysql.createConnection(config);
   console.log('msyql server connected');
   return connection;
 }
 
-let connection = null;
-createConnection().then(_connection => connection = _connection);
+let pool = null;
+createPool().then(_pool => pool = _pool);
 
 async function querySubscribers() {
-  if (!connection) {
-    connection = await createConnection();
+  if (!pool) {
+    pool = await createPool();
   }
-  const [rows] = await connection.execute(`SELECT * FROM subscriber WHERE is_active=1;`);
+  const [rows] = await pool.execute(`SELECT * FROM subscriber WHERE is_active=1;`);
   console.log(rows);
   return Array.isArray(rows) ? rows : [];
 }
 
 async function respond(req, res, next) {
-  const subscribers = await querySubscribers();
-  const mailerList = subscribers.map(p => p.email);
-  const content = await sendEmail(mailerList, req.body);
-  res.json(content);
+  try {
+    const subscribers = await querySubscribers();
+    const mailerList = subscribers.map(p => p.email);
+    const content = await sendEmail(mailerList, req.body);
+    res.json(content);
+  } catch (err) {
+    res.json(err.message);
+  }
   next();
 }
 
@@ -54,8 +69,12 @@ async function respondTest(req, res, next) {
 }
 
 async function responseSubscribers(req, res, next) {
-  const subscribers = await querySubscribers();
-  res.json(subscribers);
+  try {
+    const subscribers = await querySubscribers();
+    res.json(subscribers);
+  } catch (err) {
+    res.json(err.message);
+  } 
   next();
 }
 
