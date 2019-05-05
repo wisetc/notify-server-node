@@ -1,3 +1,4 @@
+// @format
 const restify = require('restify');
 const mysql = require('mysql2/promise');
 const sendEmail = require('../app').sendEmail;
@@ -26,7 +27,7 @@ async function createPool() {
     ...config,
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0
+    queueLimit: 0,
   });
   console.log('pool created');
   return pool;
@@ -39,15 +40,38 @@ async function createConnection() {
 }
 
 let pool = null;
-createPool().then(_pool => pool = _pool);
+createPool().then(_pool => (pool = _pool));
 
 async function querySubscribers() {
   if (!pool) {
     pool = await createPool();
   }
-  const [rows] = await pool.execute(`SELECT * FROM subscriber WHERE is_active=1;`);
+  const [rows] = await pool.execute(
+    `SELECT * FROM subscriber WHERE is_active=1;`,
+  );
   console.log(rows);
   return Array.isArray(rows) ? rows : [];
+}
+
+async function saveBuild({content, creator, product, version}) {
+  if (!pool) {
+    pool = await createPool();
+  }
+  if (!content) {
+    throw new Error('content 不能为空');
+  } else if (!creator) {
+    throw new Error('creator 不能为空');
+  } else if (!product) {
+    throw new Error('product 不能为空');
+  } else if (!version) {
+    throw new Error('version 不能为空');
+  }
+
+  const sql =
+    'INSERT INTO `build` ( `content`, `create_time`, `creator`, `product`, `version`) VALUES ( ?, NOW(), ?, ?, ? );';
+  const result = await pool.execute(sql, [content, creator, product, version]);
+  console.log(result);
+  return result;
 }
 
 async function respond(req, res, next) {
@@ -74,7 +98,23 @@ async function responseSubscribers(req, res, next) {
     res.json(subscribers);
   } catch (err) {
     res.json(err.message);
-  } 
+  }
+  next();
+}
+
+async function responseSaveBuild(req, res, next) {
+  try {
+    const body = req.body;
+    const result = await saveBuild({
+      content: body.content,
+      creator: body.creator,
+      product: body.product,
+      version: body.version,
+    });
+    res.json(result);
+  } catch (err) {
+    res.send(400, {message: err.message, success: false});
+  }
   next();
 }
 
@@ -82,6 +122,7 @@ const server = restify.createServer();
 server.use(restify.plugins.bodyParser());
 
 server.post('/', respond);
+server.post('/savebuild', responseSaveBuild);
 server.get('/testconnection', respondTest);
 server.get('/subscribers', responseSubscribers);
 
