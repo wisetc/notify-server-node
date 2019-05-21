@@ -2,6 +2,8 @@
 const restify = require('restify');
 const mysql = require('mysql2/promise');
 const sendEmail = require('../app').sendEmail;
+const winston = require('winston');
+const { has } = require('../lib/utils');
 
 const config = {
   host: process.env.DB_HOST,
@@ -10,6 +12,19 @@ const config = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
 };
+
+const { combine, timestamp, prettyPrint } = winston.format;
+
+const logger = winston.createLogger({
+  format: combine(
+    timestamp(),
+    prettyPrint()
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'logs/combined.log' })
+  ]
+});
 
 async function testConnection(config) {
   const connection = await mysql.createConnection(config);
@@ -126,10 +141,30 @@ async function respondLoggerServer(req, res, next) {
 }
 
 async function respondLog(req, res, next) {
-  res.json({
-    name: 'logger server log'
-  });
-  next();
+  const { body } = req;
+  const allowedLevels = ['info', 'warn', 'error'];
+
+  if (!body) {
+    res.send(400, {message: '未携带任何参数', success: false});
+    await next();
+    return;
+  } else if (!has(body, 'level')) {
+    res.send(400, {message: 'level 不可缺', success: false});
+    await next();
+    return;
+  } else if (!allowedLevels.includes(body.level)) {
+    res.send(400, {message: 'level: '+ body.level +' 不属于' + allowedLevels.join(', ') + '中的任意一个', success: false});
+    await next();
+    return;
+  } else if (!has(body, 'message')) {
+    res.send(400, {message: 'message 不可缺', success: false});
+    await next();
+    return;
+  }
+  
+  logger.log(body);
+  res.json(body);
+  await next();
 }
 
 const server = restify.createServer();
