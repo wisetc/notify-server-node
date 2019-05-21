@@ -118,6 +118,20 @@ async function responseSaveBuild(req, res, next) {
   next();
 }
 
+async function respondLoggerServer(req, res, next) {
+  res.json({
+    name: 'logger server'
+  });
+  next();
+}
+
+async function respondLog(req, res, next) {
+  res.json({
+    name: 'logger server log'
+  });
+  next();
+}
+
 const server = restify.createServer();
 server.use(restify.plugins.bodyParser());
 
@@ -125,6 +139,9 @@ server.post('/', respond);
 server.post('/savebuild', responseSaveBuild);
 server.get('/testconnection', respondTest);
 server.get('/subscribers', responseSubscribers);
+
+server.get('/logger', respondLoggerServer);
+server.post('/logger/log', respondLog);
 
 server.listen(process.env.PORT || 80, function() {
   console.log('%s listening at %s', server.name, server.url);
