@@ -28,6 +28,7 @@ const logger = winston.createLogger({
 });
 
 const cors = corsMiddleware({
+  preflightMaxAge: 5,
   origins: ['*'],
   allowHeaders: ['API-Token'],
   exposeHeaders: ['API-Token-Expiry'],
@@ -140,7 +141,7 @@ async function responseSaveBuild(req, res, next) {
   next();
 }
 
-async function respondLoggerServer(req, res, next) {
+function respondLoggerServer(req, res, next) {
   res.json({
     name: 'logger server'
   });
@@ -153,25 +154,21 @@ async function respondLog(req, res, next) {
 
   if (!body) {
     res.send(400, {message: '未携带任何参数', success: false});
-    await next();
-    return;
+    return next();
   } else if (!has(body, 'level')) {
     res.send(400, {message: 'level 不可缺', success: false});
-    await next();
-    return;
+    return next();
   } else if (!allowedLevels.includes(body.level)) {
     res.send(400, {message: 'level: '+ body.level +' 不属于' + allowedLevels.join(', ') + '中的任意一个', success: false});
-    await next();
-    return;
+    return next();
   } else if (!has(body, 'message')) {
     res.send(400, {message: 'message 不可缺', success: false});
-    await next();
-    return;
+    return next();
   }
   
   logger.log(body);
   res.json(body);
-  await next();
+  next();
 }
 
 const server = restify.createServer();
