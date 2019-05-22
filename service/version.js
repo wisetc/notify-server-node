@@ -28,15 +28,9 @@ const logger = winston.createLogger({
 });
 
 const cors = corsMiddleware({
-  preflightMaxAge: 5, //Optional
-  origins: [
-    'http://localhost(:[\d]+)?$',
-    'http://192\.168\.\d+\.\d+(:[\d]+)?$',
-    'http://*.uqugu.com(:[\d]+)?$',
-    'http://*.sayyoo.cn(:[\d]+)?$'
-  ],
+  origins: ['*'],
   allowHeaders: ['API-Token'],
-  exposeHeaders: ['API-Token-Expiry']
+  exposeHeaders: ['API-Token-Expiry'],
 })
 
 async function testConnection(config) {
@@ -181,9 +175,9 @@ async function respondLog(req, res, next) {
 }
 
 const server = restify.createServer();
-server.use(restify.plugins.bodyParser());
 server.pre(cors.preflight);
 server.use(cors.actual);
+server.use(restify.plugins.bodyParser());
 
 server.post('/', respond);
 server.post('/savebuild', responseSaveBuild);
