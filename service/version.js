@@ -1,10 +1,11 @@
 // @format
 const restify = require('restify');
 const mysql = require('mysql2/promise');
+const corsMiddleware = require('restify-cors-middleware');
 const sendEmail = require('../app').sendEmail;
 const winston = require('winston');
 const { has } = require('../lib/utils');
-
+ 
 const config = {
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
@@ -25,6 +26,18 @@ const logger = winston.createLogger({
     new winston.transports.File({ filename: 'logs/combined.log' })
   ]
 });
+
+const cors = corsMiddleware({
+  preflightMaxAge: 5, //Optional
+  origins: [
+    'http://localhost(:[\d]+)?$',
+    'http://192\.168\.\d+\.\d+(:[\d]+)?$',
+    'http://*.uqugu.com(:[\d]+)?$',
+    'http://*.sayyoo.cn(:[\d]+)?$'
+  ],
+  allowHeaders: ['API-Token'],
+  exposeHeaders: ['API-Token-Expiry']
+})
 
 async function testConnection(config) {
   const connection = await mysql.createConnection(config);
@@ -169,6 +182,8 @@ async function respondLog(req, res, next) {
 
 const server = restify.createServer();
 server.use(restify.plugins.bodyParser());
+server.pre(cors.preflight);
+server.use(cors.actual);
 
 server.post('/', respond);
 server.post('/savebuild', responseSaveBuild);
