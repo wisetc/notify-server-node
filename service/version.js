@@ -5,6 +5,7 @@ const corsMiddleware = require('restify-cors-middleware');
 const sendEmail = require('../app').sendEmail;
 const winston = require('winston');
 const { has } = require('../lib/utils');
+const bootstrap = require('./handlers');
  
 const config = {
   host: process.env.DB_HOST,
@@ -64,6 +65,8 @@ async function createConnection() {
 
 let pool = null;
 createPool().then(_pool => (pool = _pool));
+
+const handlers = bootstrap(pool, createPool);
 
 async function querySubscribers() {
   if (!pool) {
@@ -171,9 +174,31 @@ async function respondLog(req, res, next) {
   next();
 }
 
+async function respondGetLatestVersion(req, res, next) {
+  const { query } = req;
+
+  if (!query) {
+    res.send(400, {message: '未携带任何参数', success: false});
+    return next();
+  } else if (!has(query, 'platform')) {
+    res.send(400, {message: 'platform 不可缺', success: false});
+    return next();
+  }
+
+  try {
+    const result = await handlers.getLatestVersion(query.platform);
+    res.json({data: result, success: true});
+    return next();
+  } catch(e) {
+    res.send(400, {message: e.message, success: false});
+    return next();
+  }
+}
+
 const server = restify.createServer();
 server.pre(cors.preflight);
 server.use(cors.actual);
+server.use(restify.plugins.queryParser());
 server.use(restify.plugins.bodyParser());
 
 server.post('/', respond);
@@ -183,6 +208,8 @@ server.get('/subscribers', responseSubscribers);
 
 server.get('/logger', respondLoggerServer);
 server.post('/logger/log', respondLog);
+
+server.get('/version/latest', respondGetLatestVersion);
 
 server.listen(process.env.PORT || 80, function() {
   console.log('%s listening at %s', server.name, server.url);
