@@ -27,7 +27,7 @@ module.exports = function bootstrap(pool, createPool) {
       }
 
       const sql =
-        'SELECT `id`, `product`, `version` `content`, `creator`, `create_time` FROM `build` where `product`=? ORDER BY ID DESC LIMIT 1';
+        'SELECT `id`, `product`, `version`, `content`, `creator`, `create_time` FROM `build` where `product`=? ORDER BY ID DESC LIMIT 1';
 
       const [rows] = await pool.execute(sql, [platform]);
       if (rows.length > 0) {
