@@ -79,27 +79,6 @@ async function querySubscribers() {
   return Array.isArray(rows) ? rows : [];
 }
 
-async function saveBuild({content, creator, product, version}) {
-  if (!pool) {
-    pool = await createPool();
-  }
-  if (!content) {
-    throw new Error('content 不能为空');
-  } else if (!creator) {
-    throw new Error('creator 不能为空');
-  } else if (!product) {
-    throw new Error('product 不能为空');
-  } else if (!version) {
-    throw new Error('version 不能为空');
-  }
-
-  const sql =
-    'INSERT INTO `build` ( `content`, `create_time`, `creator`, `product`, `version`) VALUES ( ?, NOW(), ?, ?, ? );';
-  const result = await pool.execute(sql, [content, creator, product, version]);
-  console.log(result);
-  return result;
-}
-
 async function respond(req, res, next) {
   try {
     const subscribers = await querySubscribers();
@@ -131,7 +110,7 @@ async function responseSubscribers(req, res, next) {
 async function responseSaveBuild(req, res, next) {
   try {
     const body = req.body;
-    const result = await saveBuild({
+    const result = await handlers.saveBuild({
       content: body.content,
       creator: body.creator,
       product: body.product,
