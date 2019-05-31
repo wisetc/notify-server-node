@@ -37,6 +37,11 @@ module.exports = function bootstrap(pool, createPool) {
       }
     },
 
+    /**
+     * 保存编译的版本到库
+     * @param {object} version
+     * @return {object}
+     */
     saveBuild: async function({ content, creator, product, version }) {
       if (!pool) {
         pool = await createPool();
