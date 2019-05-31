@@ -36,5 +36,31 @@ module.exports = function bootstrap(pool, createPool) {
         throw new Error('查无数据');
       }
     },
+
+    saveBuild: async function({ content, creator, product, version }) {
+      if (!pool) {
+        pool = await createPool();
+      }
+      if (!content) {
+        throw new Error('content 不能为空');
+      } else if (!creator) {
+        throw new Error('creator 不能为空');
+      } else if (!product) {
+        throw new Error('product 不能为空');
+      } else if (!version) {
+        throw new Error('version 不能为空');
+      }
+
+      const sql =
+        'INSERT INTO `build` ( `content`, `create_time`, `creator`, `product`, `version`) VALUES ( ?, NOW(), ?, ?, ? );';
+      const result = await pool.execute(sql, [
+        content,
+        creator,
+        product,
+        version,
+      ]);
+      console.log(result);
+      return result;
+    },
   };
 };
