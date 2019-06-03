@@ -121,7 +121,7 @@ module.exports = function bootstrap(pool, createPool) {
         browser,
         ip,
         level,
-        message,
+        JSON.stringify(message),
         org,
         os,
         platform,
