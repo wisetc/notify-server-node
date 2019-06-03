@@ -149,7 +149,17 @@ async function respondLog(req, res, next) {
   }
   
   logger.log(body);
-  res.json(body);
+  if (body.save) {
+    try {
+      await handlers.saveActivity(body);
+      res.json(body);
+    } catch (e) {
+      res.send(400, {message: e.message, success: false});
+    }
+  } else {
+    res.json(body);
+  }
+
   next();
 }
 

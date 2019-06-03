@@ -1,3 +1,5 @@
+const { has } = require('../lib/utils');
+
 /**
  * bootstrap
  * @param {object} pool
@@ -66,6 +68,67 @@ module.exports = function bootstrap(pool, createPool) {
       ]);
       console.log(result);
       return result;
+    },
+
+    saveActivity: async function(activity) {
+      if (!pool) {
+        pool = await createPool();
+      }
+
+      const {
+        level,
+        ua = null,
+        os = null,
+        browser = null,
+        org = null,
+        ip = null,
+        platform,
+        message,
+      } = activity;
+
+      // validation
+      const requiredKeys = ['level', 'platform', 'message'];
+      for (const key of requiredKeys) {
+        if (!has(activity, key)) {
+          throw new Error(`${key} 不能为空`);
+        }
+      }
+
+      const allowedLevels = ['info', 'warn', 'error'];
+      if (!allowedLevels.includes(level)) {
+        throw new Error(
+          'level: ' +
+            level +
+            ' 不属于' +
+            allowedLevels.join(', ') +
+            '中的任意一个'
+        );
+      }
+
+      const allowedPlatforms = ['dingtalk', 'PC', 'wechat'];
+      if (!allowedPlatforms.includes(platform)) {
+        throw new Error(
+          `platform: ${platform} 不属于 ${allowedPlatforms.join(
+            ', '
+          )}中的任意一个`
+        );
+      }
+
+      const sql =
+        'INSERT INTO `client_activity` ( `browser`, `ip`, `level`, `message`, `org`, `os`, `platform`, `timestamp`, `ua`) VALUES ( ?, ?, ?, ?, ?, ?, ?, NOW(), ? );';
+
+      const [rows] = await pool.execute(sql, [
+        browser,
+        ip,
+        level,
+        message,
+        org,
+        os,
+        platform,
+        ua,
+      ]);
+      console.log(rows);
+      return rows;
     },
   };
 };
