@@ -1,7 +1,7 @@
 p #{name}好,
-p #{detail}
+p !{detail}
 if commitMessage
-  p 本次更新<span style="margin-left:4px;"></span>「<span style="background:#a86454; padding:4px; color:white; text-decoration:underline;">#{commitMessage}</span> 」
+  p 本次更新<span style="margin-left:4px;"></span>「<span style="background:#a86454; padding:4px; color:white; text-decoration:underline;">!{commitMessage}</span> 」
 if author
   p 本次提交者: #{author}
 p 当前时间: #{new Date().toLocaleString()}
