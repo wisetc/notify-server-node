@@ -190,7 +190,7 @@ server.use(cors.actual);
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.bodyParser());
 
-server.post('/', respond);
+server.post('/sendemail', respond);
 server.post('/savebuild', responseSaveBuild);
 server.get('/testconnection', respondTest);
 server.get('/subscribers', responseSubscribers);
