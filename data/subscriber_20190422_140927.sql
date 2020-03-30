@@ -29,11 +29,7 @@ AUTO_INCREMENT = 2;
 
 -- Dump data of "subscriber" -------------------------------
 INSERT INTO `subscriber`(`id`,`name`,`email`,`is_staff`,`is_active`) VALUES 
-( '1', 'wangzhi', 'zhi@uqugu.com', '1', '1' ),
-( '2', 'zhoutingting', 'zhoutingting@dexingroup.com', '1', '1' ),
-( '3', 'lipan', 'lipan@dexingroup.com', '1', '1' ),
-( '4', 'luchunfeng', '849538010@qq.com', '1', '1' ),
-( '5', '赫永鹏', '1039681233@qq.com', '1', '1' );
+( '1', 'wangzhi', 'lao@example.com', '1', '1' )
 -- ---------------------------------------------------------
 
 
