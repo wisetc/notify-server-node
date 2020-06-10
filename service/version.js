@@ -1,32 +1,11 @@
 // @format
 const restify = require('restify');
 const mysql = require('mysql2/promise');
-const corsMiddleware = require('restify-cors-middleware');
 const sendEmail = require('../app').sendEmail;
-const winston = require('winston');
 const { has } = require('../lib/utils');
 const bootstrap = require('./handlers');
-const { db: config } = require('../config');
-
-const { combine, timestamp, prettyPrint } = winston.format;
-
-const logger = winston.createLogger({
-  format: combine(
-    timestamp(),
-    prettyPrint()
-  ),
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: 'logs/combined.log' })
-  ]
-});
-
-const cors = corsMiddleware({
-  preflightMaxAge: 5,
-  origins: ['*'],
-  allowHeaders: ['API-Token'],
-  exposeHeaders: ['API-Token-Expiry'],
-})
+const { db: config, cors } = require('../config');
+const logger = require('./logger');
 
 async function testConnection(config) {
   const connection = await mysql.createConnection(config);
