@@ -1,6 +1,5 @@
 const Email = require('email-templates');
 const nodemailer = require('nodemailer');
-require('dotenv').config();
 const { email: auth } = require('./config');
 
 function configEmail() {
