@@ -4,7 +4,7 @@ const restify = require('restify');
 const mysql = require('mysql2/promise');
 const sendEmail = require('./email').sendEmail;
 const { has } = require('../lib/utils');
-const bootstrap = require('./handlers');
+const bootstrap = require('./db');
 const { db: config, cors } = require('../config');
 const logger = require('./logger');
 
