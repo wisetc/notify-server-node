@@ -1,6 +1,6 @@
 const Email = require('email-templates');
 const nodemailer = require('nodemailer');
-const { email: auth } = require('./config');
+const { email: auth } = require('../config');
 
 function configEmail() {
   const transport = nodemailer.createTransport({
