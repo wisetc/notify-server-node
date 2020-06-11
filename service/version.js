@@ -1,4 +1,5 @@
 // @format
+require('../env');
 const restify = require('restify');
 const mysql = require('mysql2/promise');
 const sendEmail = require('../app').sendEmail;
