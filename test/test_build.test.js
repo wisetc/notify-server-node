@@ -39,7 +39,7 @@ async function getPostBody() {
 
 async function saveBuild() {
   const postBody = await getPostBody();
-  const url = 'http://localhost:28225/savebuild';
+  const url = 'http://localhost:7100/savebuild';
   const shellCmd = `curl "${url}" -d "${postBody}"`;
   console.log(shellCmd);
   const {stdout, stderr} = await exec(shellCmd);

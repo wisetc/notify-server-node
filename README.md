@@ -10,4 +10,4 @@ $ npm start
 
 ### 测试 logger
 
-使用 postman 访问 `http://localhost:28225/logger`。
+使用 postman 访问 `http://localhost:7100/logger`。
