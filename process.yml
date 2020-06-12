@@ -5,6 +5,6 @@ apps:
     interpreter: /bin/node
     restart: always
     env:
-      PORT: 28225
+      PORT: 7100
       NODE_ENV: production
 

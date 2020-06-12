@@ -20,6 +20,6 @@ server.post('/logger/log', handlers.respondLog);
 
 server.get('/version/latest', handlers.respondGetLatestVersion);
 
-server.listen(process.env.PORT || 80, function() {
+server.listen(process.env.APP_PORT || 80, function() {
   console.log('%s listening at %s', server.name, server.url);
 });
