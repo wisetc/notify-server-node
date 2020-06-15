@@ -40,7 +40,7 @@ EMAIL_USERNAME=who@qq.com
 EMAIL_PASSWORD=somepass
 ```
 
-设置数据库信息，服务端口，QQ配置等。
+设置数据库信息，服务端口，QQ邮箱配置等。
 
 ## 启动
 
@@ -59,3 +59,7 @@ $ npm start
 ```
 $ npm test
 ```
+
+## 部署
+
+可以使用pm2部署，已内置一个配置文件。
