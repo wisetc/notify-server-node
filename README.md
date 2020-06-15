@@ -11,6 +11,16 @@
 
 请直接查看源码文件`src/routes.js`，找到对应的路由和参数。
 
+例如：
+
+- GET /version/latest
+- GET /testconnection
+- GET /subscribers
+
+## 修改邮件模板
+
+请找到对应的模板文件，它们放置在`emails/build`文件夹中。其中涉及到的参数由请求参数中传递进去。例如：`name, detail, commitMessage, author, version, url`。模板采用pug预发编写。
+
 ## 导入数据
 
 数据表结构保存在 `<rootDir>/data`目录下。
