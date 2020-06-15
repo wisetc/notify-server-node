@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app",
+    "start": "node index",
     "dev": "NODE_DEV=dev npm start",
     "test": "node test/test_build.test"
   },
