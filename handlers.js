@@ -1,9 +1,9 @@
 const mysql = require('mysql2/promise');
-const sendEmail = require('./email').sendEmail;
-const bootstrap = require('./db');
-const { has } = require('../lib/utils');
-const logger = require('./logger');
-const { db: config } = require('../config');
+const sendEmail = require('./service/email').sendEmail;
+const bootstrap = require('./service/db');
+const { has } = require('./lib/utils');
+const logger = require('./service/logger');
+const { db: config } = require('./config');
 
 async function testConnection(config) {
   const connection = await mysql.createConnection(config);

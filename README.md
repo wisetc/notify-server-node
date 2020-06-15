@@ -11,3 +11,9 @@ $ npm start
 ### 测试 logger
 
 使用 postman 访问 `http://localhost:7100/logger`。
+
+运行 test
+
+```
+$ npm test
+```
