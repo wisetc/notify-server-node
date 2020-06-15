@@ -27,6 +27,8 @@
 
 ## 设置服务
 
+包含如下的环境变量。
+
 ```
 DB_HOST=localhost
 DB_PORT=3306
@@ -40,7 +42,7 @@ EMAIL_USERNAME=who@qq.com
 EMAIL_PASSWORD=somepass
 ```
 
-设置数据库信息，服务端口，QQ邮箱配置等。
+设置数据库信息，服务端口，QQ邮箱配置等。可以通过新建一个`.env`文件来管理环境变量的配置。
 
 ## 启动
 
