@@ -1,5 +1,5 @@
 // @format
-require('./env');
+require('../env');
 const restify = require('restify');
 const handlers = require('./handlers');
 const { cors } = require('./config');
