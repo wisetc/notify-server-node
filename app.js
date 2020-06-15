@@ -1,8 +1,8 @@
 // @format
-require('../env');
+require('./env');
 const restify = require('restify');
 const handlers = require('./handlers');
-const { cors } = require('../config');
+const { cors } = require('./config');
 
 const server = restify.createServer();
 server.pre(cors.preflight);
