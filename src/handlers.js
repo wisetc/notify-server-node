@@ -27,12 +27,6 @@ async function createPool() {
   return pool;
 }
 
-async function createConnection() {
-  const connection = await mysql.createConnection(config);
-  console.log('msyql server connected');
-  return connection;
-}
-
 let pool = null;
 createPool().then(_pool => (pool = _pool));
 
