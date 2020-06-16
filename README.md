@@ -19,7 +19,7 @@
 
 ## 修改邮件模板
 
-请找到对应的模板文件，它们放置在`emails/build`文件夹中。其中涉及到的参数由请求参数中传递进去。例如：`name, detail, commitMessage, author, version, url`。模板采用pug预发编写。
+请找到对应的模板文件，它们放置在`emails/build`文件夹中。其中涉及到的参数由请求参数中传递进去。例如：`name, detail, commitMessage, author, version, url`。模板采用pug语法编写。
 
 ## 导入数据
 
@@ -42,7 +42,7 @@ EMAIL_USERNAME=who@qq.com
 EMAIL_PASSWORD=somepass
 ```
 
-设置数据库信息，服务端口，QQ邮箱配置等。可以通过新建一个`.env`文件来管理环境变量的配置。
+设置数据库信息，服务端口，QQ邮箱配置等。可以通过在项目根目录下新建一个`.env`文件来管理环境变量的配置。
 
 ## 启动
 
